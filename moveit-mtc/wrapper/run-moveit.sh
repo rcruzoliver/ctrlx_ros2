@@ -1,6 +1,9 @@
 #!/bin/bash
 export ROS_BASE=$SNAP/rosruntime
-export PYTHONPATH=$PYTHONPATH:$ROS_BASE/lib/python3.10/site-packages
+export PYTHONPATH=$PYTHONPATH:$ROS_BASE/lib/python3.10/site-packages:$SNAP/opt/ros/humble/lib/python3.10/site-packages:$SNAP/opt/ros/humble/local/lib/python3.10/dist-packages
+echo $PYTHONPATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP/opt/ros/humble/lib
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP/opt/ros/humble/lib/x86_64-linux-gnu
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/lib/$TRIPLET
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/usr/lib
@@ -10,5 +13,5 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/usr/lib/$TRIPLET
 source $ROS_BASE/opt/ros/humble/setup.bash #source if ros2 using debian package is build as a snap
 #source $ROS_BASE/setup.bash #source if ros2 is built from source
 source $SNAP/local_setup.bash 
-
-# $SNAP/app/lib/app/listener
+exec $SNAP/opt/ros/humble/bin/ros2 launch mtc_tutorial pick_place_demo.launch.py 
+## && $SNAP/app/lib/mtc_tutorial/mtc_node

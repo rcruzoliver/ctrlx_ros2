@@ -1,0 +1,59 @@
+name: ros2-moveit-mtc
+version: '2.2.0'
+summary: Snap with MoveIt task constructor example
+description: |
+  It runs the planning for the robot motion. Visualization happens in desktop computer
+
+base: core22
+grade: stable
+confinement: strict
+
+parts:
+  ros-app:
+    plugin: dump
+    source: install
+    stage-packages:
+      - ros-humble-moveit
+      - ros-humble-ament-index-python
+      - ros-humble-ros2launch
+      - ros-humble-launch-param-builder
+      - ros-humble-launch
+      - ros-humble-launch-ros
+      - ros-humble-xacro
+      - ros-humble-moveit-msgs
+      - python3-setuptools
+      - libpsm-infinipath1
+      - libzmq5
+      - ctrlx-datalayer
+    override-build: |
+        snapcraftctl build
+        ln -sf ../libpsm1/libpsm_infinipath.so.1.16  $SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/libpsm_infinipath.so.1
+
+  wrapper-scripts:
+    plugin: dump
+    source: wrapper/
+    organize:
+      ./run-moveit.sh : usr/bin/run-moveit
+
+apps:
+  mtc:
+    command: usr/bin/run-moveit
+    plugs:
+      - ros-base
+      - network
+      - network-bind
+    # daemon: simple
+    # passthrough:
+      # restart-condition: always
+      # restart-delay: 10s
+
+plugs:
+  ros-base:
+    interface: content
+    content: executables
+    target: $SNAP/rosruntime
+    
+  datalayer:
+    interface: content
+    content: datalayer
+    target: $SNAP_DATA/.datalayer

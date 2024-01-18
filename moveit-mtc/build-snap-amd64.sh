@@ -8,5 +8,5 @@ else
     exit 1
 fi
 
-sudo snapcraft clean --destructive-mode
+sudo snapcraft clean --destructive-mode 
 sudo snapcraft --destructive-mode
