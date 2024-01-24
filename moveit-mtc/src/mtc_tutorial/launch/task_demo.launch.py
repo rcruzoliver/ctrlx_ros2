@@ -4,7 +4,7 @@ from moveit_configs_utils import MoveItConfigsBuilder
 
 
 def generate_launch_description():
-    moveit_config = MoveItConfigsBuilder("moveit_resources_panda").to_dict()
+    moveit_config_minimal = MoveItConfigsBuilder("moveit_resources_panda").to_dict()
 
     # MTC Demo node
     pick_place_demo = Node(
@@ -14,7 +14,7 @@ def generate_launch_description():
         # executable="mtc_tutorial",
         output="screen",
         parameters=[
-            moveit_config,
+            moveit_config_minimal,
         ],
     )
 
