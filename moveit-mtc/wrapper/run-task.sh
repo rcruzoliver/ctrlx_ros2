@@ -1,7 +1,9 @@
 #!/bin/bash
 export ROS_BASE=$SNAP/rosruntime
 
-export PYTHONPATH=$PYTHONPATH:$ROS_BASE/lib/python3.10/site-packages:$SNAP/opt/ros/humble/lib/python3.10/site-packages:$SNAP/opt/ros/humble/local/lib/python3.10/dist-packages
+export PYTHONPATH=$PYTHONPATH:$ROS_BASE/lib/python3.10/site-packages
+export PYTHONPATH=$PYTHONPATH:$SNAP/opt/ros/humble/lib/python3.10/site-packages
+export PYTHONPATH=$PYTHONPATH:$SNAP/opt/ros/humble/local/lib/python3.10/dist-packages
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP/opt/ros/humble/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP/opt/ros/humble/lib/controller_manager

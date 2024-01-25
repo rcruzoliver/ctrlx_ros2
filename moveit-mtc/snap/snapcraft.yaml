@@ -1,8 +1,8 @@
 name: ros2-moveit-mtc
 version: '2.2.0'
-summary: Snap with MoveIt task constructor example
+summary: Snap with MoveIt2, MoveIt task constructor and ros2_control example
 description: |
-  It runs the planning for the robot motion. Visualization happens in desktop computer
+  It runs a fake Panda robot HW, the corresponding robot controllers and the MTC planning. Visualization happens in desktop computer.
 
 base: core22
 grade: stable
@@ -11,60 +11,27 @@ confinement: strict
 parts:
   ros-app:
     plugin: dump
-    source: install
+    source: ./install
+    # organize:
+    #  '*': ros-app/    
     stage-packages:
       - ros-humble-moveit
-      - ros-humble-moveit-core
-      - ros-humble-moveit-common
-      - ros-humble-ament-index-python
       - ros-humble-ros2launch
       - ros-humble-launch-param-builder
-      - ros-humble-launch
-      - ros-humble-launch-ros
       - ros-humble-xacro
-      - ros-humble-moveit-msgs
-      - ros-humble-controller-manager
-      - ros-humble-controller-manager-msgs
       - ros-humble-ros2-control
-      - ros-humble-ros2-controllers ###
-      - ros-humble-controller-interface
-      - ros-humble-hardware-interface
-      - ros-humble-ros2-control-test-assets
-      - ros-humble-joint-limits
-      - ros-humble-ros-workspace
-      - ros-humble-pluginlib
-      - ros-humble-realtime-tools
-      - ros-humble-ros2param
-      - ros-humble-class-loader
-      - ros-humble-tinyxml2-vendor
-      - ros-humble-control-msgs
-      - ros-humble-ros2controlcli
-      - ros-humble-transmission-interface
-      - ros-humble-position-controllers
-      - ros-humble-sensor-msgs
-      - ros-humble-console-bridge-vendor
-      - ros-humble-rcl-interfaces
-      - ros-humble-rclcpp-action
-      - ros-humble-moveit-simple-controller-manager
-      - ros-humble-trajectory-msgs
-      - ros-humble-moveit-resources-panda-description
-      - ros-humble-moveit-resources-panda-moveit-config
-      - ros-humble-moveit-plugins
-      - ros-humble-moveit-setup-app-plugins
-      - ros-humble-moveit-setup-core-plugins
-      - ros-humble-rclcpp-lifecycle
+      - ros-humble-ros2-controllers 
       - ros-humble-gripper-controllers
-      - python3-setuptools
       - libpsm-infinipath1
       - libzmq5
       - ctrlx-datalayer
     override-build: |
         snapcraftctl build
         ln -sf ../libpsm1/libpsm_infinipath.so.1.16  $SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/libpsm_infinipath.so.1
-
+        
   wrapper-scripts:
     plugin: dump
-    source: wrapper/
+    source: ./wrapper
     organize:
       '*' : usr/bin/
 
