@@ -1,0 +1,2 @@
+string ioname
+bool value

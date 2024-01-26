@@ -8,20 +8,41 @@ base: core22
 grade: stable
 confinement: strict
 
-# architectures:
-#   - build-on: [amd64]
-#    build-for: [arm64]
+apps:
+  server:
+    command: usr/bin/runner
+    plugs:
+      - ros-base
+      - network
+      - network-bind
+      - shmem-plug
+    slots: [shmem-slot] 
+    daemon: simple
+    passthrough:
+      restart-condition: always
+      restart-delay: 10s
 
 parts:
+  interfaces:
+    plugin: dump
+    source: install
+    override-build: |
+        snapcraftctl build
+
+  wrapper-scripts:
+    plugin: dump
+    source: wrapper/
+    organize:
+      ./runner.sh : usr/bin/runner
   ros-base:
     plugin: colcon
-    source: https://github.com/ros2/ros2.git
-    source-branch: humble
-    build-packages: [make, gcc, g++, python3-rosdep]
+    build-packages: [make, gcc, g++]
     stage-packages: [
       software-properties-common,
       ros-humble-ros-base,
+      ros-humble-rosbridge-server,
       python3-argcomplete,
+      python3-netifaces,
       ca-certificates
     ]
     build-environment:
@@ -36,7 +57,6 @@ parts:
 
   helper: 
     plugin: python
-    source: .
     build-environment:
       - PYTHONPATH: "$SNAPCRAFT_PART_INSTALL/usr/lib/python3/dist-packages"
     stage-packages:
@@ -46,6 +66,10 @@ parts:
       - empy
       - numpy
       - rosdep 
+      - netifaces
+      - pymongo
+      - Pillow
+      - tornado
       - rosdistro
       - colcon-core
       - lark
@@ -55,3 +79,13 @@ slots:
     interface: content
     content: executables
     read: [/]
+
+  shmem-slot:
+    interface: shared-memory
+    write: ['*'] # paths are relative to /dev/shm
+    private: false 
+plugs:
+  shmem-plug:
+    interface: shared-memory
+    shared-memory: shmem-slot
+    private: false
