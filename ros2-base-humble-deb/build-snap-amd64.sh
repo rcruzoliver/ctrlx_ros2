@@ -1,11 +1,8 @@
 #!/bin/bash
-rm -rf install/
-mkdir -p install/app
-rm -rf build/
-rm -rf log/
 
-source /opt/ros/humble/setup.bash
-colcon build --packages-select myinterface
+sudo rm -r install/ build/ log/ parts/ stage/ prime/
+
+source colcon-build.sh
 if [ $? -eq 0 ]
 then
     echo " "
@@ -13,5 +10,5 @@ else
     exit 1
 fi
 
-snapcraft clean --destructive-mode
-snapcraft --destructive-mode
+sudo snapcraft clean --destructive-mode
+sudo snapcraft --destructive-mode

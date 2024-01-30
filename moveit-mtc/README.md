@@ -52,7 +52,16 @@ First you need to install the neccesary dependencies in your system.
 ### 1. Install ROS2 humble
 For this you can follow the Debian installation from the [official guide](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
 
-### 2. Install MoveIt2, MTC and ros2_control
+### 2. Install MoveIt2
+As stated in the [official documentation](https://moveit.ros.org/install-moveit2/binary/) you can install the binaries with:
+```bash
+sudo apt install ros-humble-moveit
+```
+This meta-package includes everything that is needed.
+
+### 3. Clone the MoveIt2 Task Constructor packages in the source folder
+
+, MTC and ros2_control
 You could install MoveIt2 manually, but I recommend running the [tutorials](https://moveit.picknik.ai/main/doc/tutorials/getting_started/getting_started.html) once and your system will be for sure ready to compile this project. It is important that you clone the [repository corresponding to Humble](https://github.com/ros-planning/moveit2_tutorials/tree/humble), note that this is not the one by default in the tutorial. 
 
 Likewise, when you happen to follow the tutorial for [MoveIt Task constructor](https://moveit.picknik.ai/main/doc/tutorials/pick_and_place_with_moveit_task_constructor/pick_and_place_with_moveit_task_constructor.html#getting-started), be sure again you are cloning [the repository for Humble](https://github.com/ros-planning/moveit_task_constructor/tree/humble).

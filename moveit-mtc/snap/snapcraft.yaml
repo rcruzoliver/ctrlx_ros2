@@ -16,19 +16,17 @@ parts:
     #  '*': ros-app/    
     stage-packages:
       - ros-humble-moveit
-      - ros-humble-ros2launch
-      - ros-humble-launch-param-builder
       - ros-humble-xacro
       - ros-humble-ros2-control
       - ros-humble-ros2-controllers 
       - ros-humble-gripper-controllers
-      - libpsm-infinipath1
-      - libzmq5
-      - ctrlx-datalayer
+      - ros-humble-moveit-resources-panda-moveit-config
+      - ros-humble-moveit-resources-panda-description
+      - libzmq5 # related with dataLayer (not used here)
+      - ctrlx-datalayer # related with dataLayer (not used here)
     override-build: |
         snapcraftctl build
-        ln -sf ../libpsm1/libpsm_infinipath.so.1.16  $SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/libpsm_infinipath.so.1
-        
+                
   wrapper-scripts:
     plugin: dump
     source: ./wrapper

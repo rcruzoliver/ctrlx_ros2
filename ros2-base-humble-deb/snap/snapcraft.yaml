@@ -34,8 +34,11 @@ parts:
     source: wrapper/
     organize:
       ./runner.sh : usr/bin/runner
+      
   ros-base:
     plugin: colcon
+    source: https://github.com/ros2/ros2.git
+    source-branch: humble
     build-packages: [make, gcc, g++]
     stage-packages: [
       software-properties-common,
@@ -57,6 +60,7 @@ parts:
 
   helper: 
     plugin: python
+    source: .
     build-environment:
       - PYTHONPATH: "$SNAPCRAFT_PART_INSTALL/usr/lib/python3/dist-packages"
     stage-packages:
