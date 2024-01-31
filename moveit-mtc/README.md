@@ -114,7 +114,7 @@ user@computer:~$ ros2 node list
 /transform_listener_impl_55a10e579ca0
 ```
 
-### 4. Start the visualization (TO BE IMPROVED)
+### 4. Start the visualization 
 There is a .sh file that sources the terminal and launches Rviz:
 
 ```bash
