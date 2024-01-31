@@ -1,8 +1,3 @@
-# <span style="color:red"> Repository still under construction. Do not clone. Read-only </span>
-
----
----
-
 # MoveIt2, MTC and  ros2_control for CtrlX OS
 A ROS2 Humble snap for CtrlX OS containing a demo example for robot trajectory planning using ros2_control, MoveIt2 and MoveIt Task Constructor.
 
@@ -52,23 +47,34 @@ First you need to install the neccesary dependencies in your system.
 ### 1. Install ROS2 humble
 For this you can follow the Debian installation from the [official guide](https://docs.ros.org/en/humble/Installation/Ubuntu-Install-Debians.html)
 
-### 2. Install MoveIt2
+### 2. Install MoveIt2 and ros2_control
 As stated in the [official documentation](https://moveit.ros.org/install-moveit2/binary/) you can install the binaries with:
 ```bash
 sudo apt install ros-humble-moveit
 ```
-This meta-package includes everything that is needed.
+This meta-package includes everything that is needed from MoveIt.
 
-### 3. Clone the MoveIt2 Task Constructor packages in the source folder
+Install ros2_control
+```bash
+sudo apt install ros-humble-ros2-control
+```
 
-, MTC and ros2_control
-You could install MoveIt2 manually, but I recommend running the [tutorials](https://moveit.picknik.ai/main/doc/tutorials/getting_started/getting_started.html) once and your system will be for sure ready to compile this project. It is important that you clone the [repository corresponding to Humble](https://github.com/ros-planning/moveit2_tutorials/tree/humble), note that this is not the one by default in the tutorial. 
+Install ros2_controllers
+```bash
+sudo apt install ros-humble-ros2-controllers
+```
 
-Likewise, when you happen to follow the tutorial for [MoveIt Task constructor](https://moveit.picknik.ai/main/doc/tutorials/pick_and_place_with_moveit_task_constructor/pick_and_place_with_moveit_task_constructor.html#getting-started), be sure again you are cloning [the repository for Humble](https://github.com/ros-planning/moveit_task_constructor/tree/humble).
+### 3. Clone this repository 
+This repository includes the MoveIt Task Constructor library. It is a simple clone of what can be found in [the humble-branch official repository](https://github.com/ros-planning/moveit_task_constructor/tree/humble).
 
-I highlight this point because if you follow the tutorials without paying attention to this detail, the system will not work.
+Moreover, this repository includes the mtc_demo package, which indeed uses the functionalities of MTC to program a robot task. 
 
-### 3. Create the snap
+### 4. Create the snap
+Install snapcraft in your system:
+```bash
+sudo snap install snapcraft --classic
+```
+
 Now, your system should be ready for snapcrafting. The process have been automated for you. Simply call:
 
 ```bash
