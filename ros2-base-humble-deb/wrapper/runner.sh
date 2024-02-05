@@ -1,11 +1,11 @@
 #!/bin/bash
+export TRIPLET=$(uname -m)-linux-gnu
 export ROS_BASE=$SNAP/
 export PYTHONPATH=$PYTHONPATH:$ROS_BASE/lib/python3.10/site-packages
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/lib/$TRIPLET
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/usr/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/usr/include/comm/datalayer/
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/usr/lib/x86_64-linux-gnu/
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ROS_BASE/usr/lib/$TRIPLET
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SNAP/myinterface/lib
 

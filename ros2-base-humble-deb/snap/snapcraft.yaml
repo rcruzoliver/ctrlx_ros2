@@ -15,8 +15,8 @@ apps:
       - ros-base
       - network
       - network-bind
-      - shmem-plug
-    slots: [shmem-slot] 
+      # - shmem-plug
+    # slots: [shmem-slot] 
     daemon: simple
     passthrough:
       restart-condition: always
@@ -84,12 +84,12 @@ slots:
     content: executables
     read: [/]
 
-  shmem-slot:
-    interface: shared-memory
-    write: ['*'] # paths are relative to /dev/shm
-    private: false 
-plugs:
-  shmem-plug:
-    interface: shared-memory
-    shared-memory: shmem-slot
-    private: false
+  # shmem-slot:
+    # interface: shared-memory
+    # write: ['*'] # paths are relative to /dev/shm
+    # private: false 
+# plugs:
+  # shmem-plug:
+    # interface: shared-memory
+    # shared-memory: shmem-slot
+    # private: false
