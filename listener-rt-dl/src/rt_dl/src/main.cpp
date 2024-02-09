@@ -22,6 +22,7 @@
 #include "ctrlx_datalayer_helper.h"
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
+#include "geometry_msgs/msg/vector3.hpp"
 
 using std::placeholders::_1;
 #include <stdio.h>
@@ -30,7 +31,9 @@ using std::placeholders::_1;
 #include "comm/datalayer/datalayer.h"
 #include "comm/datalayer/datalayer_system.h"
 
-#define MEM_SIZE (20) // 20 bytes
+
+
+#define MEM_SIZE (24) // 24 bytes = 192 bit = 3 * float64
  // Revision should be unique for this Layout, if you need a new memory layout define a new revision, or use checksum algorithms
 #define REVISION (0)
 
@@ -80,7 +83,7 @@ static void cleanup(comm::datalayer::DatalayerSystem* datalayer,
   datalayer->stop();
 }
 
-static comm::datalayer::Variant createMemMap(size_t size, uint32_t revision)
+static comm::datalayer::Variant createMemMap(uint32_t revision)
 {
   // A memory map defines the layout of memory
   // Memory Map contains:
@@ -100,26 +103,12 @@ static comm::datalayer::Variant createMemMap(size_t size, uint32_t revision)
   flatbuffers::FlatBufferBuilder builder;
   std::vector<flatbuffers::Offset<comm::datalayer::Variable>> vecVariables;
 
-  // for (uint32_t i = 0; i < (size / 4); i++)
-  // {
-  // char name[10];
-  //  sprintf(name, "var%u", i);
-  //  auto variable = comm::datalayer::CreateVariableDirect(builder,
-  //                                                        name,   // name of variable (has to be unique), can be divided by "/" for hierarchical structure
-  //                                                        8 * i, // bit offset of variable in memory
-  //                                                        8,     // size of variable in bits
-  //                                                        comm::datalayer::TYPE_DL_ARRAY_OF_STRING.c_str());
-  //  vecVariables.push_back(variable);
-  // }
-
-
-    auto variable = comm::datalayer::CreateVariableDirect(builder,
-                                                          "chatter",   // name of variable (has to be unique), can be divided by "/" for hierarchical structure
-                                                          0, // bit offset of variable in memory
-                                                          8 * size,     // size of variable in bits
-                                                          comm::datalayer::TYPE_DL_ARRAY_OF_STRING.c_str());
-    vecVariables.push_back(variable);
-  
+  auto variable = comm::datalayer::CreateVariableDirect(builder,
+                                                        "test_vector3",   // name of variable (has to be unique), can be divided by "/" for hierarchical structure
+                                                        0, // bit offset of variable in memory
+                                                        3*64,     // size of variable in bits
+                                                        comm::datalayer::TYPE_DL_ARRAY_OF_FLOAT64.c_str());                                                
+  vecVariables.push_back(variable);
 
   auto variables = builder.CreateVectorOfSortedTables(&vecVariables);
   comm::datalayer::MemoryMapBuilder memmap(builder);
@@ -218,8 +207,8 @@ public:
 
   RTDLSubscriber() : Node("rt_dl_subscriber")
   { 
-    subscription_ = this->create_subscription<std_msgs::msg::String>(
-      "chatter", 10, 
+    subscription_ = this->create_subscription<geometry_msgs::msg::Vector3>(
+      "test_vector3", 10, 
       std::bind(&RTDLSubscriber::topic_callback, this, _1));
       
     datalayerSystem.start(false); // Starts the ctrlX Data Layer system without a new broker because one broker is already running on ctrlX CORE
@@ -252,17 +241,17 @@ public:
 
     // Shared memory
     std::cout << "INFO Defining shared memory" << std::endl;
-    result_ = datalayerSystem.factory()->createMemorySync(input, "ros2/rt/data", provider, MEM_SIZE, comm::datalayer::MemoryType_Input);
+    result_ = datalayerSystem.factory()->createMemorySync(input, "ros2/rt/test_vector3", provider, MEM_SIZE, comm::datalayer::MemoryType_Input);
     if (comm::datalayer::STATUS_FAILED(result_))
     {
-      std::cout << "ERROR Creation of ros2/rt/data failed with: " << result_.toString() << std::endl;
+      std::cout << "ERROR Creation of ros2/rt/test_vector3 failed with: " << result_.toString() << std::endl;
       cleanup(&datalayerSystem, provider, input, nullptr);
       // return 1;
     }
 
     // Memory map
     std::cout << "INFO Setting memory map" << std::endl;
-    comm::datalayer::Variant memMap = createMemMap(MEM_SIZE, REVISION);
+    comm::datalayer::Variant memMap = createMemMap(REVISION);
     result_ = input->setMemoryMap(memMap);
     if (comm::datalayer::STATUS_FAILED(result_))
     {
@@ -272,8 +261,6 @@ public:
     }
 
     // Input ---------------------------------------
-    // uint8_t* inData = nullptr;
-    // char* inWord = nullptr;
     uint8_t* inData = new uint8_t[MEM_SIZE];
     result_ = input->beginAccess(inData, REVISION);
     if (comm::datalayer::STATUS_FAILED(result_))
@@ -292,13 +279,14 @@ public:
   }
 
 private:
-  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+  rclcpp::Subscription<geometry_msgs::msg::Vector3>::SharedPtr subscription_;
   mutable comm::datalayer::DlResult result_;
 
-  void topic_callback(const std_msgs::msg::String & msg) const
+  void topic_callback(const geometry_msgs::msg::Vector3 & msg) const
   {
     uint8_t* inData;
-    uint8_t* outData;
+    // uint8_t* buffer;
+
     result_ = input->beginAccess(inData, REVISION);
     if (comm::datalayer::STATUS_FAILED(result_))
     {
@@ -306,19 +294,19 @@ private:
       // continue;
     }
 
-    outData = (uint8_t*)malloc(strlen(msg.data.c_str()) + 1);
+    uint8_t* buffer = (uint8_t*)malloc(3*sizeof(double)); // it could be done with the "new" keyword
 
-    if (outData == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        // return 1;
-    }
+    double x_data = msg.x;
+    double y_data = msg.y;
+    double z_data = msg.z;
 
-    strcpy((char*)outData, msg.data.c_str());
+    memcpy(buffer, &(x_data), sizeof(double));
+    memcpy(buffer + sizeof(double), &(y_data), sizeof(double));
+    memcpy(buffer + 2*sizeof(double), &(z_data), sizeof(double));
 
-    memcpy(inData, outData, MEM_SIZE);
+    memcpy(inData, buffer, MEM_SIZE);
 
     input->endAccess();
-
   }
 
 };

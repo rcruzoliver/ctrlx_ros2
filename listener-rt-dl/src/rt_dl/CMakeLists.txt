@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
 
 
 #
@@ -48,7 +49,7 @@ if(BUILD_TESTING)
 endif()
 
 add_executable(rt_dl_subscriber src/main.cpp)
-ament_target_dependencies(rt_dl_subscriber rclcpp std_msgs)
+ament_target_dependencies(rt_dl_subscriber rclcpp std_msgs geometry_msgs)
 
 
 #
