@@ -1,0 +1,78 @@
+cmake_minimum_required(VERSION 3.8)
+project(rt_dl)
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+
+
+#
+# Set link directories
+#
+MESSAGE( STATUS "Libraries directory: ${LIBRARY_DIR}")
+link_directories(
+  ${LIBRARY_DIR}
+  ${LIBRARY_DEP_DIR}
+  )
+
+# User dependency directory
+#
+set (USER_DEPENDENCY_DIR ${CMAKE_CURRENT_LIST_DIR}/../../../..)
+
+SET ( PRIVATE_INCLUDE_DIRS
+  ${CMAKE_CURRENT_LIST_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_LIST_DIR}/include
+  ${USER_DEPENDENCY_DIR}/include
+  ${USER_DEPENDENCY_DIR}/include/comm.datalayer
+  )
+
+# Set target link libraries
+
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+add_executable(rt_dl_publisher src/main.cpp)
+ament_target_dependencies(rt_dl_publisher rclcpp std_msgs geometry_msgs)
+
+
+#
+# Set target include directories
+#
+target_include_directories ( rt_dl_publisher
+  PUBLIC ${PUBLIC_INCLUDE_DIRS}
+  PUBLIC ${LIBRARY_INCLUDES}
+	PRIVATE ${PRIVATE_INCLUDE_DIRS}
+)
+#
+target_link_libraries(rt_dl_publisher -Wl,--no-undefined)
+target_link_libraries(rt_dl_publisher
+  libcomm_datalayer.so
+  pthread
+  systemd
+  zmq
+  ssl
+  crypto
+)
+
+install(TARGETS
+  rt_dl_publisher
+  DESTINATION lib/${PROJECT_NAME})
+
+ament_package()

@@ -32,7 +32,6 @@ using std::placeholders::_1;
 #include "comm/datalayer/datalayer_system.h"
 
 
-
 #define MEM_SIZE (24) // 24 bytes = 192 bit = 3 * float64
  // Revision should be unique for this Layout, if you need a new memory layout define a new revision, or use checksum algorithms
 #define REVISION (0)
@@ -104,7 +103,7 @@ static comm::datalayer::Variant createMemMap(uint32_t revision)
   std::vector<flatbuffers::Offset<comm::datalayer::Variable>> vecVariables;
 
   auto variable = comm::datalayer::CreateVariableDirect(builder,
-                                                        "test_vector3",   // name of variable (has to be unique), can be divided by "/" for hierarchical structure
+                                                        "ROS_input",   // name of variable (has to be unique), can be divided by "/" for hierarchical structure
                                                         0, // bit offset of variable in memory
                                                         3*64,     // size of variable in bits
                                                         comm::datalayer::TYPE_DL_ARRAY_OF_FLOAT64.c_str());                                                
@@ -121,77 +120,6 @@ static comm::datalayer::Variant createMemMap(uint32_t revision)
   result.copyFlatbuffers(builder);
   return result;
 }
-
-
-using comm::datalayer::IProviderNode;
-
-// Basic class Provider node interface for providing data to the system
-class MyProviderNode: public IProviderNode
-{
-private:
-  comm::datalayer::Variant m_data;
-
-public:
-  MyProviderNode(comm::datalayer::Variant data)
-    : m_data(data)
-  {};
-  void setString(const std::string& input)
-  { 
-    m_data.setValue(input);
-
-  }
-  virtual ~MyProviderNode() override {};
-
-  // Create function of an object. Function will be called whenever a object should be created.
-  virtual void onCreate(const std::string& address, const comm::datalayer::Variant* data, const comm::datalayer::IProviderNode::ResponseCallback& callback) override
-  {
-    callback(comm::datalayer::DlResult::DL_FAILED, nullptr);
-  }
-
-  // Read function of a node. Function will be called whenever a node should be read.
-  virtual void onRead(const std::string& address, const comm::datalayer::Variant* data, const comm::datalayer::IProviderNode::ResponseCallback& callback) override
-  {
-    comm::datalayer::Variant dataRead;
-    dataRead = m_data;
-    callback(comm::datalayer::DlResult::DL_OK, &dataRead);
-  }
-
-  // Write function of a node. Function will be called whenever a node should be written.
-  virtual void onWrite(const std::string& address, const comm::datalayer::Variant* data, const comm::datalayer::IProviderNode::ResponseCallback& callback) override
-  {
-    std::cout << "INFO onWrite " <<  address << std::endl;
-    
-    if (data->getType() != m_data.getType())
-    {
-      callback(comm::datalayer::DlResult::DL_TYPE_MISMATCH, nullptr);
-    }
-
-    m_data = *data;
-    callback(comm::datalayer::DlResult::DL_OK, data);
-  }
-
-  // Remove function for an object. Function will be called whenever a object should be removed.
-  virtual void onRemove(const std::string& address, const comm::datalayer::IProviderNode::ResponseCallback& callback) override
-  {
-    callback(comm::datalayer::DlResult::DL_FAILED, nullptr);
-  }
-
-  // Browse function of a node. Function will be called to determine children of a node.
-  virtual void onBrowse(const std::string& address, const comm::datalayer::IProviderNode::ResponseCallback& callback) override
-  {
-    callback(comm::datalayer::DlResult::DL_FAILED, nullptr);
-  }
-
-  // Read function of metadata of an object. Function will be called whenever a node should be written.
-  virtual void onMetadata(const std::string& address, const comm::datalayer::IProviderNode::ResponseCallback& callback) override
-  {
-    // Keep this comment! Can be used as sample creating metadata programmatically.
-    // callback(comm::datalayer::DlResult::DL_OK, &_metaData);
-
-    // Take metadata from metadata.mddb
-    callback(comm::datalayer::DlResult::DL_FAILED, nullptr);
-  }
-};
 
 
 class RTDLSubscriber : public rclcpp::Node
@@ -241,10 +169,10 @@ public:
 
     // Shared memory
     std::cout << "INFO Defining shared memory" << std::endl;
-    result_ = datalayerSystem.factory()->createMemorySync(input, "ros2/rt/test_vector3", provider, MEM_SIZE, comm::datalayer::MemoryType_Input);
+    result_ = datalayerSystem.factory()->createMemorySync(input, "ros2/rt/ROS_input", provider, MEM_SIZE, comm::datalayer::MemoryType_Input);
     if (comm::datalayer::STATUS_FAILED(result_))
     {
-      std::cout << "ERROR Creation of ros2/rt/test_vector3 failed with: " << result_.toString() << std::endl;
+      std::cout << "ERROR Creation of ros2/rt/ROS_input failed with: " << result_.toString() << std::endl;
       cleanup(&datalayerSystem, provider, input, nullptr);
       // return 1;
     }
@@ -261,8 +189,8 @@ public:
     }
 
     // Input ---------------------------------------
-    uint8_t* inData = new uint8_t[MEM_SIZE];
-    result_ = input->beginAccess(inData, REVISION);
+    uint8_t* DL_data = new uint8_t[MEM_SIZE];
+    result_ = input->beginAccess(DL_data, REVISION);
     if (comm::datalayer::STATUS_FAILED(result_))
     {
       std::cout << "ERROR Accessing input memory failed with: " << result_.toString() << std::endl;
@@ -271,7 +199,7 @@ public:
     }
 
     std::cout << "INFO Filling memory with start value 0" << std::endl;
-    memset(inData, 0, MEM_SIZE);
+    memset(DL_data, 0, MEM_SIZE);
 
     input->endAccess();
 
@@ -284,10 +212,10 @@ private:
 
   void topic_callback(const geometry_msgs::msg::Vector3 & msg) const
   {
-    uint8_t* inData;
+    uint8_t* DL_data;
     // uint8_t* buffer;
 
-    result_ = input->beginAccess(inData, REVISION);
+    result_ = input->beginAccess(DL_data, REVISION);
     if (comm::datalayer::STATUS_FAILED(result_))
     {
       std::cout << "WARNING Accessing input memory failed with: " << result_.toString() << std::endl;
@@ -304,7 +232,7 @@ private:
     memcpy(buffer + sizeof(double), &(y_data), sizeof(double));
     memcpy(buffer + 2*sizeof(double), &(z_data), sizeof(double));
 
-    memcpy(inData, buffer, MEM_SIZE);
+    memcpy(DL_data, buffer, MEM_SIZE);
 
     input->endAccess();
   }
