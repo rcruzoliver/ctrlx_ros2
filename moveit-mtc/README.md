@@ -1,5 +1,15 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # MoveIt2, MTC and  ros2_control for CtrlX OS
 A ROS2 Humble snap for CtrlX OS containing a demo example for robot trajectory planning using ros2_control, MoveIt2 and MoveIt Task Constructor.
+
+This project is based on the [example](https://moveit.picknik.ai/main/doc/tutorials/pick_and_place_with_moveit_task_constructor/pick_and_place_with_moveit_task_constructor.html#) available in the MoveIt2 official tutorials. It shows how to use the MTC API to plan a complex gripping task with a Panda Robot.
+
+The original project is generally licensed under: 
+
+[![License: BSD](https://img.shields.io/badge/License-BSD-green.svg)](https://opensource.org/license/bsd-3-clause)
+
+See specific licenses declaration for each package under ./src/\<package_name> folder.
 
 ## Authorship
 Author: Raul Cruz-Oliver
@@ -64,10 +74,19 @@ Install ros2_controllers
 sudo apt install ros-humble-ros2-controllers
 ```
 
-### 3. Clone this repository 
-This repository includes the MoveIt Task Constructor library. It is a simple clone of what can be found in [the humble-branch official repository](https://github.com/ros-planning/moveit_task_constructor/tree/humble).
+### 3. Open this project
+This project includes the MoveIt Task Constructor library. It is a simple clone of what can be found in [the humble-branch official repository](https://github.com/ros-planning/moveit_task_constructor/tree/humble). This package is licensed under:
 
-Moreover, this repository includes the mtc_demo package, which indeed uses the functionalities of MTC to program a robot task. 
+[![License: BSD](https://img.shields.io/badge/License-BSD-green.svg)](https://opensource.org/license/bsd-3-clause)
+
+See corresponding LICENSE declaration in the ./src/moveit_task_constructor folder in this directory.
+
+
+Moreover, this repository includes the mtc_demo package, which indeed uses the functionalities of MTC to program a robot task. This package is based on the official MoveIt2 tutorial, licensed under:
+
+[![License: BSD](https://img.shields.io/badge/License-BSD-green.svg)](https://opensource.org/license/bsd-3-clause)
+
+See corresponding LICENSE declaration in the ./src/mtc_demo folder in this directory.
 
 ### 4. Create the snap
 Install snapcraft in your system:
