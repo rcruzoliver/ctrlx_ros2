@@ -1,3 +1,0 @@
-[submodule "moveit-mtc/src/moveit_task_constructor"]
-	path = moveit-mtc/src/moveit_task_constructor
-	url = https://github.com/ros-planning/moveit_task_constructor.git
