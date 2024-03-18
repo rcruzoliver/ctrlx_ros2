@@ -1,8 +1,8 @@
-name: ros2-listener-rt-dl
+name: ros2-listener-nrt-dl-cpp
 version: '2.2.0'
-summary: Snap with simple ROS 2 listener
+summary: Snap with ROS 2 listener that writes to the Datalayer
 description: |
-  A simple ROS 2 listener which receives ROS 2 messages on topic 'ros2_simple_cpp'.
+  A ROS 2 listener which receives ROS 2 messages on topic '/ros2_simple_talker_cpp' and writes them into datalayer on 'ros2/listenercpp/mymessage'.
 
 base: core22
 grade: stable
@@ -31,8 +31,6 @@ apps:
       - ros-base
       - network
       - network-bind
-      - datalayer
-      - datalayer-shm
     daemon: simple
     passthrough:
       restart-condition: always
@@ -48,8 +46,3 @@ plugs:
     interface: content
     content: datalayer
     target: $SNAP_DATA/.datalayer
-    
-  datalayer-shm:
-    interface: shared-memory
-    shared-memory: datalayer-shm
-

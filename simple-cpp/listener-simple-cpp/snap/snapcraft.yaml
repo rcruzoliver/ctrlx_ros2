@@ -1,4 +1,4 @@
-name: ros2-simple-talker-dl-cpp
+name: ros2-listener-simple-cpp
 version: '2.2.0'
 summary: Snap with simple ROS 2 listener
 description: |
@@ -12,9 +12,6 @@ parts:
   ros-app:
     plugin: dump
     source: install
-    stage-packages:
-      - libzmq5
-      - ctrlx-datalayer
     override-build: |
         snapcraftctl build
 
@@ -41,8 +38,4 @@ plugs:
     interface: content
     content: executables
     target: $SNAP/rosruntime
-    
-  datalayer:
-    interface: content
-    content: datalayer
-    target: $SNAP_DATA/.datalayer
+ 

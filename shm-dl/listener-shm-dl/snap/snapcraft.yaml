@@ -1,8 +1,8 @@
-name: ros2-talker-rt-dl
+name: ros2-listener-shm-dl
 version: '2.2.0'
-summary: Snap with simple ROS 2 talker
+summary: Snap with ROS 2 listener that writes to Datalayer using shared memory
 description: |
-  A simple ROS 2 talker which receives ROS 2 messages on topic 'ros2_simple_cpp'.
+  A ROS 2 listener which receives ROS 2 messages on topic '/test_vector3' and writres to Datalayer using shared memory on 'ros2/rt/ROS_input. Spinning at 200 Hz.
 
 base: core22
 grade: stable
@@ -22,11 +22,11 @@ parts:
     plugin: dump
     source: wrapper/
     organize:
-      ./run-talker.sh : usr/bin/run-talker
+      ./run-listener.sh : usr/bin/run-listener
 
 apps:
-  talker:
-    command: usr/bin/run-talker
+  listener:
+    command: usr/bin/run-listener
     plugs:
       - ros-base
       - network

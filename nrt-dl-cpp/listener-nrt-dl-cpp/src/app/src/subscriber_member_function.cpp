@@ -140,11 +140,11 @@ public:
     pippo->setString("No Message yet");
    
     
-    std::cout << "INFO Register node 'ros/listenercpp/mymessage'  " << std::endl;
-    comm::datalayer::DlResult result = provider->registerNode("ros/listenercpp/mymessage",pippo);
+    std::cout << "INFO Register node 'ros2/listenercpp/mymessage'  " << std::endl;
+    comm::datalayer::DlResult result = provider->registerNode("ros2/listenercpp/mymessage",pippo);
     if (STATUS_FAILED(result))
     {
-      std::cout << "WARN Register node 'sdk-cpp-registernode/myString' failed with: " << result.toString() << std::endl;
+      std::cout << "WARN Register node 'ros2/listenercpp/mymessage' failed with: " << result.toString() << std::endl;
     }
 
   

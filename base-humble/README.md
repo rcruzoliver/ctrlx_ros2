@@ -1,4 +1,5 @@
-# ROS 2 Humble on ctrlX OS: A Snap Implementation of the ROS 2 Humble Distribution using ROS 2 Debian Package
+# ROS 2 Humble on ctrlX OS
+A Snap Implementation of the ROS 2 Humble Distribution building ROS 2 from source.
 
 ## Introduction
 
@@ -44,26 +45,6 @@ The snapcraft plugin [python](https://snapcraft.io/docs/python-plugin) is used t
 ### Content Interface
 
 The base snap makes its files available via the content interface `executables`.
-
-## Building the Base Snap
-
-### AMD64
-
-Compiling for AMD64 on an AMD64 machine is straight-forward. Apart from the `snap/snapcraft.yaml` file and a shell script that calls snapcraft, nothing else is needed here.
-
-Call:
-
-        ./build-snap.sh
-
-### ARM64
-
-We recommend using a native ARM64 host environment to compile the ARM64 code. In this case just call `./build-snap.sh`.
-
-Building an ARM64 on an AMD64 environment requires cross-compilation, which is trickier. You can use Docker.
-
-Call:
-
-        ./build-snap-arm64-on-amd64.sh
 
 ## About
 

@@ -1,8 +1,8 @@
-name: ros2-simple-listener-cpp
+name: ros2-talker-simple-cpp
 version: '2.2.0'
-summary: Snap with simple ROS 2 listener
+summary: Snap with simple ROS 2 talker
 description: |
-  A simple ROS 2 listener which receives ROS 2 messages on topic 'ros2_simple_cpp'.
+  A simple ROS 2 talker publishes messages on topic 'ros2_simple_cpp'.
 
 base: core22
 grade: stable
@@ -12,18 +12,16 @@ parts:
   ros-app:
     plugin: dump
     source: install
-    override-build: |
-        snapcraftctl build
 
   wrapper-scripts:
     plugin: dump
     source: wrapper/
     organize:
-      ./run-listener.sh : usr/bin/run-listener
+      ./run-talker.sh : usr/bin/run-talker
 
 apps:
-  listener:
-    command: usr/bin/run-listener
+  talker:
+    command: usr/bin/run-talker
     plugs:
       - ros-base
       - network
