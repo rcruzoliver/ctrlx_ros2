@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(app)
-set(TARGET_PROJECT_NAME io_manager)
+set(TARGET_PROJECT_NAME io_manager_input)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -49,8 +49,8 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-add_executable(io_manager src/io_manager.cpp)
-ament_target_dependencies(io_manager rclcpp std_msgs sensor_msgs)
+add_executable(io_manager_input src/io_manager_input.cpp)
+ament_target_dependencies(io_manager_input rclcpp std_msgs sensor_msgs)
 
 
 #

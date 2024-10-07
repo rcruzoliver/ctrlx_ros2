@@ -1,7 +1,7 @@
-name: ros2-io-manager-cpp
+name: ros2-io-manager-input-cpp
 version: '2.2.0'
-summary: Snap with ROS 2 node that reads IO-inputs and publishes them to ROS2 topics, and writes IO-outputs from a ROS2 topic.
-description: Snap with ROS 2 node that reads IO-inputs and publishes them to ROS2 topics, and writes IO-outputs from a ROS2 topic.
+summary: Snap with ROS 2 node that reads an IO-input and publishes them to a ROS2 topic.
+description: Snap with ROS 2 node that reads an IO-input and publishes them to a ROS2 topic.
 base: core22
 grade: stable
 confinement: strict
@@ -20,11 +20,11 @@ parts:
     plugin: dump
     source: wrapper/
     organize:
-      ./run-scara-publisher.sh : usr/bin/io-manager
+      ./io-manager-input.sh : usr/bin/io-manager-input
 
 apps:
   listener:
-    command: usr/bin/io-manager
+    command: usr/bin/io-manager-input
     plugs:
       - ros-base
       - network
