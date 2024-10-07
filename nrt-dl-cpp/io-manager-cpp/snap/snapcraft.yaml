@@ -1,0 +1,46 @@
+name: ros2-io-manager-cpp
+version: '2.2.0'
+summary: Snap with ROS 2 node that reads IO-inputs and publishes them to ROS2 topics, and writes IO-outputs from a ROS2 topic.
+description: Snap with ROS 2 node that reads IO-inputs and publishes them to ROS2 topics, and writes IO-outputs from a ROS2 topic.
+base: core22
+grade: stable
+confinement: strict
+
+parts:
+  ros-app:
+    plugin: dump
+    source: install
+    stage-packages:
+      - libzmq5
+      - ctrlx-datalayer
+    override-build: |
+        snapcraftctl build
+
+  wrapper-scripts:
+    plugin: dump
+    source: wrapper/
+    organize:
+      ./run-scara-publisher.sh : usr/bin/io-manager
+
+apps:
+  listener:
+    command: usr/bin/io-manager
+    plugs:
+      - ros-base
+      - network
+      - network-bind
+    daemon: simple
+    passthrough:
+      restart-condition: always
+      restart-delay: 10s
+
+plugs:
+  ros-base:
+    interface: content
+    content: executables
+    target: $SNAP/rosruntime
+    
+  datalayer:
+    interface: content
+    content: datalayer
+    target: $SNAP_DATA/.datalayer
