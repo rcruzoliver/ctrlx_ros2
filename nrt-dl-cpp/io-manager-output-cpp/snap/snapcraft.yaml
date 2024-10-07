@@ -1,0 +1,46 @@
+name: ros2-io-manager-output-cpp
+version: '2.2.0'
+summary: ROS 2 node mapping a ROS2 topic and to a ctrlX IO-output.
+description: Snap with ROS 2 node that subscribes a ROS2 topic and write is to an IO-output.
+base: core22
+grade: stable
+confinement: strict
+
+parts:
+  ros-app:
+    plugin: dump
+    source: install
+    stage-packages:
+      - libzmq5
+      - ctrlx-datalayer
+    override-build: |
+        snapcraftctl build
+
+  wrapper-scripts:
+    plugin: dump
+    source: wrapper/
+    organize:
+      ./io-manager-output.sh : usr/bin/io-manager-output
+
+apps:
+  listener:
+    command: usr/bin/io-manager-output
+    plugs:
+      - ros-base
+      - network
+      - network-bind
+    daemon: simple
+    passthrough:
+      restart-condition: always
+      restart-delay: 10s
+
+plugs:
+  ros-base:
+    interface: content
+    content: executables
+    target: $SNAP/rosruntime
+    
+  datalayer:
+    interface: content
+    content: datalayer
+    target: $SNAP_DATA/.datalayer
