@@ -1,24 +1,14 @@
 # ROS 2 Humble on ctrlX OS
 A Snap Implementation of the ROS 2 Humble Distribution building ROS 2 from source.
 
-## Introduction
+## Build
+To build this snap you simply need to call:
 
-We recommend for ROS 2 applications running on a ctrlX OS this approach:
+```bash
+./build-snap.sh
+```
 
-* Build and install a __base snap__ containing the ROS 2 runtime and the components used for the ctrlX Data Layer access.
-* This base snap provides its components using the snap [content interface](https://snapcraft.io/docs/content-interface).
-* Pack your ROS 2 application into one or more overlay snaps.
-* Let these overlay snap use the ROS 2 runtime and the ctrlX Data Layer via the content interface of the __base snap__.
-
-This documentation describes how the base snap `ros2-base` can be build.
-
-!!! important
-    The build for arm64 devices uses Docker and is in an unreleased state!
-
-## Content of the Base Snap
-
-The file `snap/snapcraft.yaml` defines how the base snap will be build.
-
+## About
 ### Debian Packages
 
 The snapcraft plugin [colcon](https://snapcraft.io/docs/colcon-plugin) is used to download Debian packages:
@@ -44,14 +34,8 @@ The snapcraft plugin [python](https://snapcraft.io/docs/python-plugin) is used t
 
 ### Content Interface
 
-The base snap makes its files available via the content interface `executables`.
+The base snap makes its files available via the content interface `executables`. These files (ROS2 runtime) will be then later used by other snaps that use ROS2 functinalities.
 
-## About
 
-SPDX-FileCopyrightText: Copyright (c) 2023 Bosch Rexroth AG
-
-<https://www.boschrexroth.com/en/dc/imprint/>
-
-## Licenses
-
-SPDX-License-Identifier: MIT
+## License
+Snap belonging to ctrlx_ros2 repository, ergo protected under license MIT.
