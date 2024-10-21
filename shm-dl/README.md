@@ -6,6 +6,7 @@
 
 **Date and place:** October 2024, Buttikon, CH
 
+**Related 
 
 ## Description
 This collection contains the following snaps:
@@ -18,6 +19,9 @@ This snap contains a ROS2 node that publishes a topic with information read usin
 
 ### RO2_rt - PLC project
 On top of the two snaps, this folder also contains a sample ctrlX PLC project (ROS2_rt.zip) to generate and read the information expected in the datalayer.
+
+## Architecture overview
+![alt text](../docs/images/shm_overview.png)
 
 ## License
 Snap collection belonging to ctrlx_ros2 repository, ergo protected under license MIT.

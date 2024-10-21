@@ -18,5 +18,14 @@ This snap contains a ROS2 node that publishes a topic with information read from
 ### io-manager-output-cpp
 This snap contains a ROS2 node that subcribes to a externally published topic, written such information is a specifc address in the DL to trigger a hardware output.
 
+## Scara example topologie overview
+![alt text](../docs/images/scara_overview.png)
+
+## IO Manager overview
+![alt text](../docs/images/io_manager_overview.png)
+
+## Faire stand
+![alt text](../docs/images/roscon.png)
+
 ## License
 Snap collection belonging to ctrlx_ros2 repository, ergo protected under license MIT.
