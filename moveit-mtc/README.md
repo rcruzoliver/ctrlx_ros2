@@ -97,7 +97,7 @@ sudo snap install snapcraft --classic
 Now, your system should be ready for snapcrafting. The process have been automated for you. Simply call:
 
 ```bash
-./build-snap-amd64.sh
+./build-snap.sh
 ```
 Please do it in a fresh terminal, i.e. without sourcing any ROS2. Be careful you do not have it automatically sourced in ./bashrc.
 

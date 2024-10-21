@@ -6,4 +6,9 @@ It publishes the topic `scara_joints` with information read in the datalayer add
 
 The published topic is subscribed by an application running in a external device (connected in the same network as the CORE), such application runs a Rviz visualization that displays the SCARA robot accordingly.
 
+## Build
+To build this snap you simply need to call:
 
+```bash
+./build-snap.sh
+```

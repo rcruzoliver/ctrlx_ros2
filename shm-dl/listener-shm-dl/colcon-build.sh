@@ -14,4 +14,4 @@ rm -rf build/
 rm -rf log/
 
 source /opt/ros/humble/setup.bash
-colcon build
+colcon build --packages-select rt_dl
