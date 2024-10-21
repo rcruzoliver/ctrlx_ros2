@@ -6,7 +6,6 @@
 
 **Date and place:** October 2024, Buttikon, CH
 
-
 ## Description
 This set of snap packages have been developed for the ROSCon 24 in Odense, Denmak. This collection contains the following snaps:
 
