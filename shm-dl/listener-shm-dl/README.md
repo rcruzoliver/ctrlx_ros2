@@ -24,7 +24,6 @@ If this requirements are met, to build the snap simply call
 ./build-snap-amd.sh
 ```
 
-
 ## How to test the snap?
 Install the snap in your ctrlX OS, do not forget to allow installation from unknwon sources since this snap is not signed.
 
