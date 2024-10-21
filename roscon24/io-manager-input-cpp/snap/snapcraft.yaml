@@ -1,7 +1,7 @@
-name: ros2-io-manager-output-cpp
+name: ros2-io-manager-input-cpp
 version: '2.2.0'
-summary: ROS 2 node mapping a ROS2 topic and to a ctrlX IO-output.
-description: Snap with ROS 2 node that subscribes a ROS2 topic and write is to an IO-output.
+summary: ROS 2 node mapping ctrlX IO-input to a ROS2 topic.
+description: Snap with ROS 2 node that reads an IO-input and publishes them to a ROS2 topic.
 base: core22
 grade: stable
 confinement: strict
@@ -20,11 +20,11 @@ parts:
     plugin: dump
     source: wrapper/
     organize:
-      ./io-manager-output.sh : usr/bin/io-manager-output
+      ./io-manager-input.sh : usr/bin/io-manager-input
 
 apps:
   listener:
-    command: usr/bin/io-manager-output
+    command: usr/bin/io-manager-input
     plugs:
       - ros-base
       - network

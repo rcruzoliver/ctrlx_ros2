@@ -3,8 +3,8 @@
 <package format="3">
   <name>app</name>
   <version>2.2.0</version>
-  <description>Simple ROS 2 subscriber (listener) in cpp</description>
-  <maintainer email="github@boschrexroth.com">boschrexroth</maintainer>
+  <description>Write in ctrlX-DL information contained in a ROS2 topic</description>
+  <maintainer email="raul.cruz.oliver@gmail.com">rcruzoliver</maintainer>
   <license>MIT License</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>

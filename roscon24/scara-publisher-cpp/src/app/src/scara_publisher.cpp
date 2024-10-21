@@ -18,7 +18,9 @@
 
 
 #include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/bool.hpp"
+#include "std_msgs/msg/string.hpp"
+#include "sensor_msgs/msg/joint_state.hpp"
+
 
 using namespace std::chrono_literals;
 
@@ -85,32 +87,35 @@ static std::string getConnectionString(
   return connectionString + std::string("?sslport=") + std::to_string(sslPort);
 }
 
-class InputPublisher : public rclcpp::Node
+class ScaraPublisher : public rclcpp::Node
 {
 public:
-  InputPublisher() : Node("input_publisher")
+  ScaraPublisher() : Node("scara_publisher")
   {
-    publisher_ = this->create_publisher<std_msgs::msg::Bool>("io_input", 10);
+    publisher_ = this->create_publisher<sensor_msgs::msg::JointState>("scara_joints", 10);
+    joint_name_ = {"c1", "c2", "z", "c3"};
   }
 
-  void node_publish(const bool& input)
+  void node_publish(const std::vector<double>& joint_position_)
 
   {
-    auto msg = std::make_unique<std_msgs::msg::Bool>();
-    msg->data = input;
+    auto msg = std::make_unique<sensor_msgs::msg::JointState>();
+    msg->name = joint_name_;
+    msg->position = joint_position_;
     publisher_->publish(std::move(msg));
   }
 
   // rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr publisher_;
+  rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr publisher_;
   size_t count_;
+  std::vector<std::string> joint_name_;
 };
 
 int main(int argc, char * argv[])
 {
    // Initialize ROS 2
   rclcpp::init(argc, argv);
-  InputPublisher input_publisher;
+  ScaraPublisher scara_publisher;
 
   std::cout << "INFO Starting ctrlX Data Layer system (without broker)" << std::endl;
   comm::datalayer::DatalayerSystem datalayerSystem;
@@ -125,21 +130,34 @@ int main(int argc, char * argv[])
   {
     // std::cout << "Loop #" << counter++ << std::endl;
 
-    auto input_address = "fieldbuses/ethercat/master/instances/ethercatmaster/realtime_data/input/data/XI110208/Channel_2.Value";
-    comm::datalayer::Variant input_value;
+    auto c1_address = "motion/axs/Base/state/values/actual/pos";
+    auto c2_address = "motion/axs/Middle/state/values/actual/pos";
+    auto z_address = "motion/axs/ZAxis/state/values/actual/pos";
+    auto c3_address = "motion/axs/Flange/state/values/actual/pos";
+    
+    comm::datalayer::Variant c1_value;
+    comm::datalayer::Variant c2_value;
+    comm::datalayer::Variant z_value;
+    comm::datalayer::Variant c3_value;
 
-    auto result_input = dataLayerClient->readSync(input_address, &input_value);
+    auto result_c1 = dataLayerClient->readSync(c1_address, &c1_value);
+    auto result_c2 = dataLayerClient->readSync(c2_address, &c2_value);
+    auto result_z = dataLayerClient->readSync(z_address, &z_value);
+    auto result_c3 = dataLayerClient->readSync(c3_address, &c3_value);
 
-    if (result_input != DL_OK) {
+
+    if ((result_c1 != DL_OK) || (result_c2 != DL_OK) || (result_z != DL_OK) || (result_c3 != DL_OK)) {
       std::cout <<"WARN Reading failed " << std::endl;
     } 
     else
     {
-      if (input_value.getType() == comm::datalayer::VariantType::BOOL8)
+      if (c1_value.getType() == comm::datalayer::VariantType::FLOAT64)
       {
-        bool input_;
-        input_ = bool(input_value);
-        input_publisher.node_publish(input_);
+        std::vector<double> joint_pos_;
+        double grad2rad = 0.01745329251;
+        double mm2m = 0.001;
+        joint_pos_= {grad2rad*double(c1_value), grad2rad*double(c2_value), mm2m*double(z_value), grad2rad*double(c3_value)};
+        scara_publisher.node_publish(joint_pos_);
       }
       else
       {
