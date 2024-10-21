@@ -84,3 +84,5 @@ For further details about the example, have a look at the corresponding folder.
 # Related How-To's in ctrlX Community
 [ROS2 demo example - MoveIt2! in ctrlX OS](https://developer.community.boschrexroth.com/t5/Store-and-How-to/ROS2-demo-example-MoveIt2-in-ctrlX-OS/ba-p/89562)
 
+[Shared memoty communication between ROS2 and PLC via the ctrlX Datalayer](https://developer.community.boschrexroth.com/t5/Store-and-How-to/SDK-Shared-memory-communication-between-ROS2-Datalayer-and-PLC/ba-p/98107)
+
