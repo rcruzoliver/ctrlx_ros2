@@ -1,5 +1,7 @@
 # ctrlx_ros2
 
+LAST REPOSITORY UPDATE: October 2024.
+
 This is a non-official repository maintained by Raul Cruz-Oliver (raul.cruz.oliver@gmail.com) that contains an ehanced SDK for solutions that aim to integrate ROS2 into ctrlX OS. It is based on the [official ROS2-SDK](https://github.com/boschrexroth/ctrlx-automation-sdk-ros2) provided by Bosch Rexroth 
 
 Use this repository at your own risk and please contact the maintainer if you detect any bugs.
@@ -62,7 +64,7 @@ This example is composed by two snaps: **ros2-listener-nrt-dl-cpp** and **ros2-t
 This example is based on the previously presented **simple-cpp** example. In this example the ROS2 talker node reads the Data Layer and publish a message to the ROS2 DDS middleware with that information, this message is further read by a ROS2 listener node, which then writes the information back to the datalayer. This read/write process happens in a non-realtime fashion. For further details about the example, have a look at the corresponding folder.
 
 ## shm-dl
-This example is composed by two snaps: **ros2-listener-shm-dl** and **ros2-talker-shm-dl**. Specic details to build these snaps can be found in _./shm-dl/README.md_. Likewise it uses a ROS2 talker node running outside ctrlX OS, the ROS2 package containing this node can be found in [this repository](cpp_pubsub). On top of that, this example interacts with the PLC official Bosch Rexroth, the PLC project (ROS2_rt) used here is stored in ROS2_rt.zip. The PLC project must be open, compiled and uplouded to the CORE with the official PLC Engineering tool. 
+This example is composed by two snaps: **ros2-listener-shm-dl** and **ros2-talker-shm-dl**. Specic details to build these snaps can be found in _./shm-dl/README.md_. Likewise it uses a ROS2 talker node running outside ctrlX OS, the ROS2 package containing this node can be found in [this repository](./shm-dl/listener-shm-dl/src/cpp_pubsub/). On top of that, this example interacts with the PLC official Bosch Rexroth, the PLC project (ROS2_rt) used here is stored in [ROS2_rt.zip](./shm-dl/ROS2_rt.zip). The PLC project must be open, compiled and uplouded to the CORE with the official PLC Engineering tool. 
 
 This example leverages the shared memory features to communicate with the ctrlX CORE Datalayer in order to make the communication between ROS2 and any other real time app faster. As a hint, the ROS2 nodes are naturally writen in C++. 
 
@@ -71,6 +73,14 @@ The example have a ROS2 talker running in a external device, which publish a ROS
 This communication process is really fast and can be even said pseudo-realtime, however, the write/read operations relative to ROS2 are scheduled by the _roscore_, whereas the PLC tasks are scheduled by the Automation Core Main Scheduler from ctrlX OS. This fact can lead to scheduling conflicts, such as race conditions, when deploying applications based on this. 
 
 For further details about the example, have a look at the corresponding folder.
+
+## roscon24
+This example is composed by three snaps: **ros2-scara-publisher-cpp**, **io-manager-input-cpp** and **io-manager-output-cpp**. It was developed for the ROSCon 24 Faire, taking place in October 2024 in Odense, Denmark.
+
+The first of them simply publishes the actual joint positions of a scara robot (comissioned from the motion app) into a ROS2 topic, that will be further subcribed by a external Rviz visualization.
+
+The second and third snaps work together to show how a IO management functionality can be integrated with a ROS2 application. The io-manager-input reads the state of a externally triggered hardware input from the datalayer and then publishes this information in a ROS2 topic. On the contrary, io-manager-output provides a ROS2 node that subscribes to a externally published topic and then controls the hardware output by accordingly interacting with the datalayer. 
+
 
 ## moveit-mtc
 This example is composed by a single snap: **ros2-moveit-mtc**. Specic details to build this snap can be found in _./moveit-mtc/README.md_
