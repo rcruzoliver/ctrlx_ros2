@@ -18,5 +18,8 @@ This snap contains a ROS2 node that subscribes to a topic and writes the informa
 ### talker-nrt-dl-cpp
 This snap contains a ROS2 node that publishes a topic with information read from the datalayer using a non-real time mechanism.
 
+## Architecture overview
+![alt text](../docs/images/nrt_dl_overview.png)
+
 ## License
 Snap collection belonging to ctrlx_ros2 repository, ergo protected under license MIT.
