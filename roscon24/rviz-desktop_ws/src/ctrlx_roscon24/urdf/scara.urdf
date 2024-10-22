@@ -1,0 +1,166 @@
+<?xml version="1.0"?>
+<robot name="scara">
+
+
+  <!-- Box Link -->
+  <link name="box1">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/Kisteklein_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="box_material">
+        <color rgba="1 0.8235294 0.05882353 1"/> <!-- Yellow -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Box Link -->
+  <link name="box2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/Kisteklein_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="box_material">
+        <color rgba="1 0.8235294 0.05882353 1"/> <!-- Yellow -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Base Link -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/BASE_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="base_material">
+        <color rgba="1 0.8235294 0.05882353 1"/> <!-- Yellow -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- First Arm Link -->f
+  <link name="arm">
+    <visual>
+      <origin xyz="0 0 -0.19" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/ARM_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="arm_material">
+        <color rgba="1 0.8235294 0.05882353 1"/> <!-- Yellow -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Upper Forearm Link -->
+  <link name="forearm_upper">
+    <visual>
+      <origin xyz="-0.22 0 -0.40" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/FOREARM_UPPER_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="forearm_upper_material">
+        <color rgba="0.5882353 0.5882353 0.627451 1"/> <!-- Grey -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Lower Forearm Link -->
+  <link name="forearm_lower">
+    <visual>
+      <origin xyz="-0.22 0 -0.40" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/FOREARM_LOWER_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="forearm_lower_material">
+        <color rgba="1 0.8235294 0.05882353 1"/> <!-- Yellow -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Ballscrew Link -->
+  <link name="ballscrew">
+    <visual>
+      <origin xyz="-0.46 0 -0.40" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/BALLSCREW_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="ballscrew_material">
+        <color rgba="0.9019608 0.9019608 0.980392158 1"/> <!-- Grey -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Flange Link -->
+  <link name="flange">
+    <visual>
+      <origin xyz="-0.46 0 -0.14" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://ctrlx_roscon24/meshes/scara/FLANGE_bin.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="flange_material">
+        <color rgba="0.784313738 0.784313738 0.8627451 1"/> <!-- Grey -->
+      </material>
+    </visual>
+  </link>
+
+  <!-- Joints -->
+
+  <!-- Base to box -->
+  <joint name="box1" type="fixed">
+    <origin rpy="0 0 0" xyz="0.4 0.3 0"/>
+    <parent link="base_link"/>
+    <child link="box1"/>
+  </joint>
+
+  <!-- Base to box -->
+  <joint name="box2" type="fixed">
+    <origin rpy="0 0 0" xyz="0.4 -0.3 0"/>
+    <parent link="base_link"/>
+    <child link="box2"/>
+  </joint>
+
+  <!-- Base to Arm Joint (C1) -->
+  <joint name="c1" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="arm"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-6.2832" upper="6.2832" effort="50" velocity="2.0"/> <!-- -360° to 360° -->
+  </joint>
+
+  <!-- Arm to Forearm (C2) -->
+  <joint name="c2" type="revolute">
+    <origin rpy="0 0 0" xyz="0 10 0"/>
+    <parent link="arm"/>
+    <child link="forearm_lower"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.44346" upper="2.44346" effort="50" velocity="2.0"/> <!-- -140° to 140° -->
+  </joint>
+
+  <joint name="forearm_fix" type="fixed">
+    <parent link="forearm_lower"/>
+    <child link="forearm_upper"/>
+  </joint>
+
+  <!-- Forearm to Ballscrew (Z - Translation) -->
+  <joint name="z" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="forearm_lower"/>
+    <child link="ballscrew"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="0" upper="0.200" effort="100" velocity="1.0"/> <!-- 0 to 200 mm units along Z -->
+  </joint>
+
+  <!-- Ballscrew to Flange (C3) -->
+  <joint name="c3" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="ballscrew"/>
+    <child link="flange"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-6.2832" upper="6.2832" effort="50" velocity="2.0"/> <!-- -360° to 360° -->
+  </joint>
+
+</robot>
