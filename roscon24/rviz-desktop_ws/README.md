@@ -12,9 +12,16 @@ To build the workspace call:
 ./colcon-build.sh
 ```
 
-## Run
-To launch the application call:
+## Test
+To launch a test visualization call:
 
 ```bash
-./run.sh
+./run_test.sh
+```
+
+## Test
+To run the application call:
+
+```bash
+./run_scara_visu.sh
 ```
